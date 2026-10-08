@@ -105,27 +105,38 @@ describe('Circuit Unrolling & Fixpoint Detection', () => {
     expect(c.areEquivalent(stabilized[0], set)).toBe(true);
   });
 
-  it('stabilizes Malik cyclic multiplexers', () => {
+  it('stabilizes Malik cyclic network with multi-I/O components F and G', () => {
     const c = new Circuit();
     const c1 = c.createInput('C1');
     const c2 = c.createInput('C2');
-    const a = c.createInput('A');
-    const b = c.createInput('B');
-    const x = c.createInput('X');
-    const y = c.createInput('Y');
+    const a1 = c.createInput('A1');
+    const a2 = c.createInput('A2');
+    const b1 = c.createInput('B1');
+    const b2 = c.createInput('B2');
 
-    const xNext = c.mux(c1, y, a);
-    const yNext = c.mux(c2, x, b);
+    const y1 = c.createInput('Y1');
+    const y2 = c.createInput('Y2');
+    const x1 = c.createInput('X1');
+    const x2 = c.createInput('X2');
+
+    // Component F: inputs (C1, A1, A2, Y1, Y2), outputs (X1, X2)
+    const x1Next = c.mux(c1, y1, a1);
+    const x2Next = c.mux(c1, y2, a2);
+
+    // Component G: inputs (C2, B1, B2, X1, X2), outputs (Y1, Y2)
+    const y1Next = c.mux(c2, x2, b1);
+    const y2Next = c.mux(c2, x1, b2);
 
     const stabilized = c.unroll(
-      [x, y],
-      [xNext, yNext],
-      [c.CONST_FALSE, c.CONST_FALSE],
+      [x1, x2, y1, y2],
+      [x1Next, x2Next, y1Next, y2Next],
+      [c.CONST_FALSE, c.CONST_FALSE, c.CONST_FALSE, c.CONST_FALSE],
       6
     );
 
     expect(c.lastUnrollResult).toBeDefined();
     expect(c.lastUnrollResult!.stabilized).toBe(true);
+    expect(c.lastUnrollResult!.step).toBe(3);
   });
 
   it('stabilizes Muller C-element hysteresis loop at step 2', () => {

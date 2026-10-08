@@ -152,6 +152,9 @@ var Circuit = class {
         if (rNode.right === left) {
           return this.and(left, negate(rNode.left));
         }
+        if (rNode.left === negate(left) || rNode.right === negate(left)) {
+          return left;
+        }
       }
     }
     const lId = nodeId(left);
@@ -171,7 +174,16 @@ var Circuit = class {
         if (lNode.right === right) {
           return this.and(negate(lNode.left), right);
         }
+        if (lNode.left === negate(right) || lNode.right === negate(right)) {
+          return right;
+        }
       }
+    }
+    if (this.areEquivalent(left, right)) {
+      return left;
+    }
+    if (this.areEquivalent(left, negate(right))) {
+      return this.CONST_FALSE;
     }
     const key = `${left},${right}`;
     const existing = this.hashTable.get(key);

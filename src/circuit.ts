@@ -91,6 +91,10 @@ export class Circuit {
         if (rNode.right === left) {
           return this.and(left, negate(rNode.left));
         }
+        // Absorption: A & ~(~A & B) => A
+        if (rNode.left === negate(left) || rNode.right === negate(left)) {
+          return left;
+        }
       }
     }
 
@@ -115,7 +119,19 @@ export class Circuit {
         if (lNode.right === right) {
           return this.and(negate(lNode.left), right);
         }
+        // Absorption: ~(~B & A) & B => B
+        if (lNode.left === negate(right) || lNode.right === negate(right)) {
+          return right;
+        }
       }
+    }
+
+    // Semantic Equivalence Check: (~a & ~a) => ~a, and (a & ~a) => FALSE
+    if (this.areEquivalent(left, right)) {
+      return left;
+    }
+    if (this.areEquivalent(left, negate(right))) {
+      return this.CONST_FALSE;
     }
 
     // 5. Lookup & Insertion

@@ -415,7 +415,7 @@
       oscillator: "<strong>Inverter Loop / Oscillator:</strong> Combinational cycle with odd inversion: <code>X = ¬X</code>. Initial condition is <code>X₀ = FALSE</code>. The signal alternates <code>0 → 1 → 0 → 1</code> without ever reaching a fixpoint, safely halting at <code>maxK</code>.",
       arbiter: "<strong>Arbiter Multiplexer Feedback:</strong> Two coupled unrolling signals: <code>A = M ∧ B</code> and <code>B = ¬M ∨ A</code> with <code>A₀ = FALSE, B₀ = FALSE</code>. Demonstrates partial freezing where A stabilizes to FALSE at step 1 and B stabilizes to ¬M at step 2.",
       latch: "<strong>Esterel State Register / Constructive SR Latch:</strong> Canonical synchronous flip-flop equation: <code>Q_next = Set ∨ (¬Reset ∧ Q)</code> with <code>Q₀ = FALSE</code>. Stabilizes at step 2 to <code>Set</code>.",
-      malik: "<strong>Malik Constructive Cyclic Multiplexers:</strong> Two cross-coupled MUXes from Malik (1993): <code>X = MUX(C1, Y, A)</code> and <code>Y = MUX(C2, X, B)</code>. When feedback condition is inactive, stabilizes smoothly in 3 steps without dynamic oscillation.",
+      malik: "<strong>Malik Cyclic Circuits (Multi-I/O Components F &amp; G):</strong> Two coupled components F and G communicating via multiple feedback channels (X1, X2 from F→G, and Y1, Y2 from G→F). F takes (C1, A1, A2, Y1, Y2) producing feedback outputs X1, X2 and primary outputs Z1, Z2. G takes (C2, B1, B2, X1, X2) producing Y1, Y2 and primary outputs W1, W2. Stabilizes at step 3.",
       mutual: "<strong>Esterel Mutual Signal Causality:</strong> Mutually dependent reaction signals: <code>SigA = (Cond1 ∧ SigB) ∨ EmitA</code> and <code>SigB = Cond2 ∧ SigA</code> with <code>SigA₀ = FALSE, SigB₀ = FALSE</code>. Models mutual causality propagation.",
       muller: "<strong>Muller C-Element Hysteresis Loop:</strong> Speed-independent circuit gate equation: <code>C_next = (InA ∧ InB) ∨ (C ∧ (InA ∨ InB))</code>. Holds state when inputs disagree, stabilizes to <code>InA ∧ InB</code> from FALSE at step 2."
     };
@@ -497,15 +497,23 @@
       } else if (selected === 'malik') {
         const c1 = circuit.createInput('C1');
         const c2 = circuit.createInput('C2');
-        const inA = circuit.createInput('A');
-        const inB = circuit.createInput('B');
-        const x = circuit.createInput('X');
-        const y = circuit.createInput('Y');
-        const xNext = circuit.mux(c1, y, inA);
-        const yNext = circuit.mux(c2, x, inB);
-        unrollInputs = [x, y];
-        unrollOutputs = [xNext, yNext];
-        initValues = [circuit.CONST_FALSE, circuit.CONST_FALSE];
+        const a1 = circuit.createInput('A1');
+        const a2 = circuit.createInput('A2');
+        const b1 = circuit.createInput('B1');
+        const b2 = circuit.createInput('B2');
+        const y1 = circuit.createInput('Y1');
+        const y2 = circuit.createInput('Y2');
+        const x1 = circuit.createInput('X1');
+        const x2 = circuit.createInput('X2');
+
+        const x1Next = circuit.mux(c1, y1, a1);
+        const x2Next = circuit.mux(c1, y2, a2);
+        const y1Next = circuit.mux(c2, x2, b1);
+        const y2Next = circuit.mux(c2, x1, b2);
+
+        unrollInputs = [x1, x2, y1, y2];
+        unrollOutputs = [x1Next, x2Next, y1Next, y2Next];
+        initValues = [circuit.CONST_FALSE, circuit.CONST_FALSE, circuit.CONST_FALSE, circuit.CONST_FALSE];
       } else if (selected === 'mutual') {
         const cond1 = circuit.createInput('Cond1');
         const cond2 = circuit.createInput('Cond2');

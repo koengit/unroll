@@ -57,6 +57,30 @@ describe('Circuit Simplifications', () => {
     const res = c.and(a, notA_b);
     expect(res).toBe(c.CONST_FALSE);
   });
+
+  it('simplifies (~a & ~a) --> ~a directly and under equivalent expressions', () => {
+    const c = new Circuit();
+    const a = c.createInput('A');
+    const b = c.createInput('B');
+
+    // Direct (~a & ~a) => ~a
+    const notA = c.not(a);
+    expect(c.and(notA, notA)).toBe(notA);
+
+    // Equivalent expression for ~a: (~a & b) | (~a & ~b)
+    const equivNotA = c.or(c.and(notA, b), c.and(notA, c.not(b)));
+    // ANDing notA with equivNotA must simplify to notA
+    expect(c.and(notA, equivNotA)).toBe(notA);
+  });
+
+  it('simplifies absorption laws: A and (A or B) = A, and ~A and (~A or B) = ~A', () => {
+    const c = new Circuit();
+    const a = c.createInput('A');
+    const b = c.createInput('B');
+
+    expect(c.and(a, c.or(a, b))).toBe(a);
+    expect(c.and(c.not(a), c.or(c.not(a), b))).toBe(c.not(a));
+  });
 });
 
 describe('SAT Equivalence Checking', () => {
