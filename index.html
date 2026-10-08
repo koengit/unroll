@@ -2,10 +2,518 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=examples/index.html">
-  <title>AIG Unroller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIG Unroller - Interactive Circuit Fixpoint Visualizer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --panel-bg: #ffffff;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --accent: #8b5cf6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title-group p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    .repo-link {
+      color: #93c5fd;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid #3b82f6;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .repo-link:hover {
+      background: rgba(59, 130, 246, 0.15);
+      color: #ffffff;
+    }
+
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Controls Bar */
+    .controls-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .control-item label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    select, input[type="range"] {
+      background: #0f172a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .slider-val {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #38bdf8;
+      min-width: 1.5rem;
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: auto;
+    }
+
+    button.btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    button.btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* Metrics Bar */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .metric-card .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .metric-card .value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-align: center;
+      width: fit-content;
+    }
+
+    .badge.stabilized {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid #059669;
+    }
+
+    .badge.maxk {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid #d97706;
+    }
+
+    /* Description card */
+    .desc-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1.25rem;
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+
+    .desc-card strong {
+      color: #38bdf8;
+    }
+
+    /* Comparison Panels */
+    .panels-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      flex: 1;
+    }
+
+    @media (max-width: 900px) {
+      .panels-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 480px;
+    }
+
+    .panel-header {
+      padding: 0.875rem 1.25rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .panel-body {
+      flex: 1;
+      background: #fafafa;
+      padding: 1rem;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel-body svg {
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+  </style>
+  <script src="examples/bundle.js"></script>
 </head>
 <body>
-  <p>Redirecting to <a href="examples/index.html">AIG Unroller Interactive Visualizer</a>...</p>
+  <header>
+    <div class="header-content">
+      <div class="title-group">
+        <h1>
+          <span>⚡</span> AIG Unroller &amp; Fixpoint Visualizer
+        </h1>
+        <p>Constructive causality analysis, hash-consed And-Inverter Graph, and incremental MiniSat unrolling</p>
+      </div>
+      <div>
+        <a href="https://github.com/koengit/unroll" class="repo-link" target="_blank" rel="noopener">GitHub: koengit/unroll</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="controls-card">
+      <div class="control-item" style="flex: 2; min-width: 260px;">
+        <label for="exampleSelect">Canonical Example Circuit</label>
+        <select id="exampleSelect">
+          <option value="constructive">Example 1: Esterel Constructive Loop (X = X ∧ Y)</option>
+          <option value="oscillator">Example 2: Inverter Loop / Oscillator (X = ¬X)</option>
+          <option value="arbiter">Example 3: Arbiter Multiplexer Feedback (A, B)</option>
+        </select>
+      </div>
+
+      <div class="control-item">
+        <label for="maxKInput">Max Unroll Steps (maxK)</label>
+        <div class="slider-wrap">
+          <input type="range" id="maxKInput" min="1" max="10" value="6">
+          <span class="slider-val" id="maxKVal">6</span>
+        </div>
+      </div>
+
+      <button id="runBtn" class="btn-primary">▶ Run Unroll &amp; Compare</button>
+    </div>
+
+    <div class="desc-card" id="exampleDesc">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <div class="metrics-bar">
+      <div class="metric-card">
+        <span class="label">Stabilization Status</span>
+        <div id="metricStatus"><span class="badge stabilized">READY</span></div>
+      </div>
+      <div class="metric-card">
+        <span class="label">Steps Taken</span>
+        <span class="value" id="metricSteps">-</span>
+      </div>
+      <div class="metric-card">
+        <span class="label">Gates Before vs After</span>
+        <span class="value" id="metricGates">-</span>
+      </div>
+      <div class="metric-card">
+        <span class="label">SAT Equivalence Queries</span>
+        <span class="value" id="metricQueries">-</span>
+      </div>
+    </div>
+
+    <div class="panels-grid">
+      <!-- Left Panel: Initial Circuit -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Initial Circuit Topology</div>
+            <div class="panel-subtitle">Before unrolling (feedback connections cut at unroll inputs)</div>
+          </div>
+          <span id="leftGateCount" class="panel-subtitle">0 nodes</span>
+        </div>
+        <div class="panel-body" id="leftPanel">
+          <!-- SVG injected here -->
+        </div>
+      </div>
+
+      <!-- Right Panel: Stabilized / Unrolled Circuit -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Unrolled / Stabilized Topology</div>
+            <div class="panel-subtitle">Fixpoint logic after SAT equivalence evaluation</div>
+          </div>
+          <span id="rightGateCount" class="panel-subtitle">0 nodes</span>
+        </div>
+        <div class="panel-body" id="rightPanel">
+          <!-- SVG injected here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    AIG Incremental SAT Unroller • Built for Esterel compilation &amp; cyclic circuit stabilization
+  </footer>
+
+  <script>
+    const descriptions = {
+      constructive: "<strong>Esterel Constructive Loop:</strong> Signal emitted in a loop conditioned on external input Y: <code>X = X ∧ Y</code>. Initial state is <code>X₀ = FALSE</code>. Stabilizes immediately at step 1 because <code>FALSE ∧ Y ≡ FALSE</code>.",
+      oscillator: "<strong>Inverter Loop / Oscillator:</strong> Combinational cycle with odd inversion: <code>X = ¬X</code>. Initial condition is <code>X₀ = FALSE</code>. The signal alternates <code>0 → 1 → 0 → 1</code> without ever reaching a fixpoint, safely halting at <code>maxK</code>.",
+      arbiter: "<strong>Arbiter Multiplexer Feedback:</strong> Two coupled unrolling signals: <code>A = M ∧ B</code> and <code>B = ¬M ∨ A</code> with <code>A₀ = FALSE, B₀ = FALSE</code>. Demonstrates partial freezing where A stabilizes to FALSE at step 1 and B stabilizes to ¬M at step 2."
+    };
+
+    const exampleSelect = document.getElementById('exampleSelect');
+    const maxKInput = document.getElementById('maxKInput');
+    const maxKVal = document.getElementById('maxKVal');
+    const runBtn = document.getElementById('runBtn');
+    const exampleDesc = document.getElementById('exampleDesc');
+
+    const metricStatus = document.getElementById('metricStatus');
+    const metricSteps = document.getElementById('metricSteps');
+    const metricGates = document.getElementById('metricGates');
+    const metricQueries = document.getElementById('metricQueries');
+
+    const leftPanel = document.getElementById('leftPanel');
+    const rightPanel = document.getElementById('rightPanel');
+    const leftGateCount = document.getElementById('leftGateCount');
+    const rightGateCount = document.getElementById('rightGateCount');
+
+    maxKInput.addEventListener('input', (e) => {
+      maxKVal.textContent = e.target.value;
+    });
+
+    exampleSelect.addEventListener('change', () => {
+      exampleDesc.innerHTML = descriptions[exampleSelect.value];
+      run();
+    });
+
+    runBtn.addEventListener('click', run);
+
+    function run() {
+      const selected = exampleSelect.value;
+      const maxK = parseInt(maxKInput.value, 10);
+      exampleDesc.innerHTML = descriptions[selected];
+
+      if (!window.AigUnroller) {
+        metricStatus.innerHTML = '<span class="badge maxk">Error: Engine not loaded</span>';
+        return;
+      }
+
+      const { Circuit, exportSvg } = window.AigUnroller;
+      const circuit = new Circuit();
+
+      let unrollInputs = [];
+      let unrollOutputs = [];
+      let initValues = [];
+
+      if (selected === 'constructive') {
+        const y = circuit.createInput('Y');
+        const x = circuit.createInput('X');
+        const xNext = circuit.and(x, y);
+        unrollInputs = [x];
+        unrollOutputs = [xNext];
+        initValues = [circuit.CONST_FALSE];
+      } else if (selected === 'oscillator') {
+        const x = circuit.createInput('X');
+        const xNext = circuit.not(x);
+        unrollInputs = [x];
+        unrollOutputs = [xNext];
+        initValues = [circuit.CONST_FALSE];
+      } else if (selected === 'arbiter') {
+        const m = circuit.createInput('M');
+        const a = circuit.createInput('A');
+        const b = circuit.createInput('B');
+        const aNext = circuit.and(m, b);
+        const bNext = circuit.or(circuit.not(m), a);
+        unrollInputs = [a, b];
+        unrollOutputs = [aNext, bNext];
+        initValues = [circuit.CONST_FALSE, circuit.CONST_FALSE];
+      }
+
+      // Netlist before unrolling
+      const netlistBefore = circuit.exportNetlist(unrollOutputs);
+      const svgBefore = exportSvg(netlistBefore, { title: 'Before Unrolling (Step 0)' });
+      leftPanel.innerHTML = svgBefore;
+      leftGateCount.textContent = `${netlistBefore.nodes.length} nodes`;
+
+      // Perform unrolling
+      const finalOutputs = circuit.unroll(unrollInputs, unrollOutputs, initValues, maxK);
+      const res = circuit.lastUnrollResult;
+
+      // Netlist after unrolling
+      const netlistAfter = circuit.exportNetlist(finalOutputs);
+      const svgAfter = exportSvg(netlistAfter, {
+        title: res?.stabilized
+          ? `Stabilized Fixpoint (Step ${res.step})`
+          : `State at maxK (${maxK})`
+      });
+      rightPanel.innerHTML = svgAfter;
+      rightGateCount.textContent = `${netlistAfter.nodes.length} nodes`;
+
+      // Update metrics
+      if (res?.stabilized) {
+        metricStatus.innerHTML = `<span class="badge stabilized">STABILIZED at step ${res.step}</span>`;
+      } else {
+        metricStatus.innerHTML = `<span class="badge maxk">MAX_K REACHED (${maxK})</span>`;
+      }
+
+      metricSteps.textContent = res ? `${res.step} / ${maxK}` : '-';
+      metricGates.textContent = `${netlistBefore.nodes.length} → ${netlistAfter.nodes.length}`;
+      metricQueries.textContent = `${circuit.stats.equivalenceQueries}`;
+    }
+
+    // Initial run
+    run();
+  </script>
 </body>
 </html>
