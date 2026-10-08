@@ -14,7 +14,11 @@
     "test": "vitest run",
     "example:constructive": "tsx examples/01-constructive-loop.ts",
     "example:oscillator": "tsx examples/02-oscillator-loop.ts",
-    "example:arbiter": "tsx examples/03-arbiter-multiplexer.ts"
+    "example:arbiter": "tsx examples/03-arbiter-multiplexer.ts",
+    "example:latch": "tsx examples/04-cross-coupled-latch.ts",
+    "example:malik": "tsx examples/05-malik-cyclic.ts",
+    "example:mutual": "tsx examples/06-mutual-causality.ts",
+    "example:muller": "tsx examples/07-muller-c-element.ts"
   },
   "dependencies": {
     "logic-solver": "^2.0.1"

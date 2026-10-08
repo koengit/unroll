@@ -42,6 +42,18 @@ npm run example:oscillator
 
 # Example 3: Multi-Signal Arbiter Multiplexer Feedback
 npm run example:arbiter
+
+# Example 4: Esterel Constructive SR Latch
+npm run example:latch
+
+# Example 5: Malik Constructive Cyclic Multiplexers
+npm run example:malik
+
+# Example 6: Esterel Mutual Signal Causality
+npm run example:mutual
+
+# Example 7: Muller C-Element Hysteresis Loop
+npm run example:muller
 ```
 
 ## Interactive Browser Showcase
@@ -62,6 +74,22 @@ Open `examples/index.html` in your browser, or visit the live GitHub Pages showc
 3. **Multi-Signal Arbiter** (`examples/03-arbiter-multiplexer.ts`):
    - Circuit: $A = M \land B$, $B = \neg M \lor A$ with $A_0 = \text{FALSE}, B_0 = \text{FALSE}$.
    - Result: Demonstrates multi-step partial freezing where $A$ stabilizes at step 1 to $\text{FALSE}$ and $B$ stabilizes at step 2 to $\neg M$.
+
+4. **Constructive SR Latch** (`examples/04-cross-coupled-latch.ts`):
+   - Circuit: $Q = \text{Set} \lor (\neg \text{Reset} \land Q)$ with $Q_0 = \text{FALSE}$.
+   - Result: Stabilizes at step 2 to $\text{Set}$.
+
+5. **Malik Cyclic Multiplexers** (`examples/05-malik-cyclic.ts`):
+   - Circuit: $X = \text{MUX}(C_1, Y, A)$, $Y = \text{MUX}(C_2, X, B)$.
+   - Result: Demonstrates combinational cycle resolution from Malik (1993), stabilizing at step 3.
+
+6. **Mutual Causality** (`examples/06-mutual-causality.ts`):
+   - Circuit: $A = (C_1 \land B) \lor \text{EmitA}$, $B = C_2 \land A$.
+   - Result: Models mutual reactive signal causality, stabilizing at step 3.
+
+7. **Muller C-Element** (`examples/07-muller-c-element.ts`):
+   - Circuit: $C = (A \land B) \lor (C \land (A \lor B))$ with $C_0 = \text{FALSE}$.
+   - Result: Fundamental asynchronous hysteresis building block, stabilizing at step 2.
 
 ## License
 

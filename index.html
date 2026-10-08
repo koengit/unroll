@@ -333,6 +333,10 @@
           <option value="constructive">Example 1: Esterel Constructive Loop (X = X ∧ Y)</option>
           <option value="oscillator">Example 2: Inverter Loop / Oscillator (X = ¬X)</option>
           <option value="arbiter">Example 3: Arbiter Multiplexer Feedback (A, B)</option>
+          <option value="latch">Example 4: Esterel State Register / Constructive SR Latch</option>
+          <option value="malik">Example 5: Malik Constructive Cyclic Multiplexers</option>
+          <option value="mutual">Example 6: Esterel Mutual Signal Causality</option>
+          <option value="muller">Example 7: Muller C-Element Hysteresis Loop</option>
         </select>
       </div>
 
@@ -409,7 +413,11 @@
     const descriptions = {
       constructive: "<strong>Esterel Constructive Loop:</strong> Signal emitted in a loop conditioned on external input Y: <code>X = X ∧ Y</code>. Initial state is <code>X₀ = FALSE</code>. Stabilizes immediately at step 1 because <code>FALSE ∧ Y ≡ FALSE</code>.",
       oscillator: "<strong>Inverter Loop / Oscillator:</strong> Combinational cycle with odd inversion: <code>X = ¬X</code>. Initial condition is <code>X₀ = FALSE</code>. The signal alternates <code>0 → 1 → 0 → 1</code> without ever reaching a fixpoint, safely halting at <code>maxK</code>.",
-      arbiter: "<strong>Arbiter Multiplexer Feedback:</strong> Two coupled unrolling signals: <code>A = M ∧ B</code> and <code>B = ¬M ∨ A</code> with <code>A₀ = FALSE, B₀ = FALSE</code>. Demonstrates partial freezing where A stabilizes to FALSE at step 1 and B stabilizes to ¬M at step 2."
+      arbiter: "<strong>Arbiter Multiplexer Feedback:</strong> Two coupled unrolling signals: <code>A = M ∧ B</code> and <code>B = ¬M ∨ A</code> with <code>A₀ = FALSE, B₀ = FALSE</code>. Demonstrates partial freezing where A stabilizes to FALSE at step 1 and B stabilizes to ¬M at step 2.",
+      latch: "<strong>Esterel State Register / Constructive SR Latch:</strong> Canonical synchronous flip-flop equation: <code>Q_next = Set ∨ (¬Reset ∧ Q)</code> with <code>Q₀ = FALSE</code>. Stabilizes at step 2 to <code>Set</code>.",
+      malik: "<strong>Malik Constructive Cyclic Multiplexers:</strong> Two cross-coupled MUXes from Malik (1993): <code>X = MUX(C1, Y, A)</code> and <code>Y = MUX(C2, X, B)</code>. When feedback condition is inactive, stabilizes smoothly in 3 steps without dynamic oscillation.",
+      mutual: "<strong>Esterel Mutual Signal Causality:</strong> Mutually dependent reaction signals: <code>SigA = (Cond1 ∧ SigB) ∨ EmitA</code> and <code>SigB = Cond2 ∧ SigA</code> with <code>SigA₀ = FALSE, SigB₀ = FALSE</code>. Models mutual causality propagation.",
+      muller: "<strong>Muller C-Element Hysteresis Loop:</strong> Speed-independent circuit gate equation: <code>C_next = (InA ∧ InB) ∨ (C ∧ (InA ∨ InB))</code>. Holds state when inputs disagree, stabilizes to <code>InA ∧ InB</code> from FALSE at step 2."
     };
 
     const exampleSelect = document.getElementById('exampleSelect');
@@ -478,6 +486,47 @@
         unrollInputs = [a, b];
         unrollOutputs = [aNext, bNext];
         initValues = [circuit.CONST_FALSE, circuit.CONST_FALSE];
+      } else if (selected === 'latch') {
+        const set = circuit.createInput('Set');
+        const reset = circuit.createInput('Reset');
+        const q = circuit.createInput('Q');
+        const qNext = circuit.or(set, circuit.and(circuit.not(reset), q));
+        unrollInputs = [q];
+        unrollOutputs = [qNext];
+        initValues = [circuit.CONST_FALSE];
+      } else if (selected === 'malik') {
+        const c1 = circuit.createInput('C1');
+        const c2 = circuit.createInput('C2');
+        const inA = circuit.createInput('A');
+        const inB = circuit.createInput('B');
+        const x = circuit.createInput('X');
+        const y = circuit.createInput('Y');
+        const xNext = circuit.mux(c1, y, inA);
+        const yNext = circuit.mux(c2, x, inB);
+        unrollInputs = [x, y];
+        unrollOutputs = [xNext, yNext];
+        initValues = [circuit.CONST_FALSE, circuit.CONST_FALSE];
+      } else if (selected === 'mutual') {
+        const cond1 = circuit.createInput('Cond1');
+        const cond2 = circuit.createInput('Cond2');
+        const emitA = circuit.createInput('EmitA');
+        const sigA = circuit.createInput('SigA');
+        const sigB = circuit.createInput('SigB');
+        const sigANext = circuit.or(circuit.and(cond1, sigB), emitA);
+        const sigBNext = circuit.and(cond2, sigA);
+        unrollInputs = [sigA, sigB];
+        unrollOutputs = [sigANext, sigBNext];
+        initValues = [circuit.CONST_FALSE, circuit.CONST_FALSE];
+      } else if (selected === 'muller') {
+        const inA = circuit.createInput('InA');
+        const inB = circuit.createInput('InB');
+        const outC = circuit.createInput('C');
+        const both = circuit.and(inA, inB);
+        const either = circuit.or(inA, inB);
+        const cNext = circuit.or(both, circuit.and(outC, either));
+        unrollInputs = [outC];
+        unrollOutputs = [cNext];
+        initValues = [circuit.CONST_FALSE];
       }
 
       // Netlist before unrolling
