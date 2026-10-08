@@ -23,10 +23,10 @@
   <path d="M 120 400 C 147 400, 153 337.2, 180 337.2" class="wire"/>
   <path d="M 120 190 C 210 190, 230 252.8, 320 252.8" class="wire"/>
   <path d="M 230 330 C 270.5 330, 279.5 267.2, 320 267.2" class="wire"/>
-  <path d="M 230 260 C 333.5 260, 348.5 252.8, 452 252.8" class="wire-inv"/>
-  <circle cx="456" cy="252.8" r="3.5" class="bubble"/>
-  <path d="M 370 260 C 410.5 260, 411.5 267.2, 452 267.2" class="wire-inv"/>
-  <circle cx="456" cy="267.2" r="3.5" class="bubble"/>
+  <path d="M 230 260 C 333.5 260, 348.5 182.8, 452 182.8" class="wire-inv"/>
+  <circle cx="456" cy="182.8" r="3.5" class="bubble"/>
+  <path d="M 370 260 C 410.5 260, 411.5 197.2, 452 197.2" class="wire-inv"/>
+  <circle cx="456" cy="197.2" r="3.5" class="bubble"/>
   <path d="M 120 190 C 147 190, 145 392.8, 172 392.8" class="wire-inv"/>
   <circle cx="176" cy="392.8" r="3.5" class="bubble"/>
   <path d="M 120 470 C 147 470, 153 407.2, 180 407.2" class="wire"/>
@@ -35,47 +35,49 @@
   <path d="M 120 540 C 147 540, 153 477.2, 180 477.2" class="wire"/>
   <path d="M 120 190 C 210 190, 230 322.8, 320 322.8" class="wire"/>
   <path d="M 230 470 C 270.5 470, 279.5 337.2, 320 337.2" class="wire"/>
-  <path d="M 230 400 C 333.5 400, 348.5 322.8, 452 322.8" class="wire-inv"/>
-  <circle cx="456" cy="322.8" r="3.5" class="bubble"/>
-  <path d="M 370 330 C 410.5 330, 411.5 337.2, 452 337.2" class="wire-inv"/>
-  <circle cx="456" cy="337.2" r="3.5" class="bubble"/>
+  <path d="M 230 400 C 333.5 400, 348.5 252.8, 452 252.8" class="wire-inv"/>
+  <circle cx="456" cy="252.8" r="3.5" class="bubble"/>
+  <path d="M 370 330 C 410.5 330, 411.5 267.2, 452 267.2" class="wire-inv"/>
+  <circle cx="456" cy="267.2" r="3.5" class="bubble"/>
   <path d="M 120 330 C 210 330, 230 392.8, 320 392.8" class="wire"/>
   <path d="M 230 400 C 270.5 400, 279.5 407.2, 320 407.2" class="wire"/>
-  <path d="M 230 330 C 333.5 330, 348.5 392.8, 452 392.8" class="wire-inv"/>
-  <circle cx="456" cy="392.8" r="3.5" class="bubble"/>
-  <path d="M 370 400 C 410.5 400, 411.5 407.2, 452 407.2" class="wire-inv"/>
-  <circle cx="456" cy="407.2" r="3.5" class="bubble"/>
+  <path d="M 230 330 C 333.5 330, 348.5 322.8, 452 322.8" class="wire-inv"/>
+  <circle cx="456" cy="322.8" r="3.5" class="bubble"/>
+  <path d="M 370 400 C 410.5 400, 411.5 337.2, 452 337.2" class="wire-inv"/>
+  <circle cx="456" cy="337.2" r="3.5" class="bubble"/>
   <path d="M 120 330 C 210 330, 230 462.8, 320 462.8" class="wire"/>
   <path d="M 230 260 C 270.5 260, 279.5 477.2, 320 477.2" class="wire"/>
-  <path d="M 230 470 C 333.5 470, 348.5 462.8, 452 462.8" class="wire-inv"/>
+  <path d="M 230 470 C 333.5 470, 348.5 392.8, 452 392.8" class="wire-inv"/>
+  <circle cx="456" cy="392.8" r="3.5" class="bubble"/>
+  <path d="M 370 470 C 410.5 470, 411.5 407.2, 452 407.2" class="wire-inv"/>
+  <circle cx="456" cy="407.2" r="3.5" class="bubble"/>
+  <path d="M 120 260 C 336 260, 384 322.8, 600 322.8" class="wire"/>
+  <path d="M 510 190 C 550.5 190, 551.5 337.2, 592 337.2" class="wire-inv"/>
+  <circle cx="596" cy="337.2" r="3.5" class="bubble"/>
+  <path d="M 120 470 C 273 470, 299 462.8, 452 462.8" class="wire-inv"/>
   <circle cx="456" cy="462.8" r="3.5" class="bubble"/>
-  <path d="M 370 470 C 410.5 470, 411.5 477.2, 452 477.2" class="wire-inv"/>
+  <path d="M 370 330 C 410.5 330, 411.5 477.2, 452 477.2" class="wire-inv"/>
   <circle cx="456" cy="477.2" r="3.5" class="bubble"/>
-  <path d="M 120 260 C 336 260, 384 252.8, 600 252.8" class="wire"/>
-  <path d="M 510 260 C 550.5 260, 551.5 267.2, 592 267.2" class="wire-inv"/>
-  <circle cx="596" cy="267.2" r="3.5" class="bubble"/>
-  <path d="M 120 470 C 336 470, 376 322.8, 592 322.8" class="wire-inv"/>
-  <circle cx="596" cy="322.8" r="3.5" class="bubble"/>
-  <path d="M 510 330 C 550.5 330, 559.5 337.2, 600 337.2" class="wire"/>
   <path d="M 120 400 C 336 400, 384 392.8, 600 392.8" class="wire"/>
-  <path d="M 510 400 C 550.5 400, 551.5 407.2, 592 407.2" class="wire-inv"/>
+  <path d="M 510 330 C 550.5 330, 551.5 407.2, 592 407.2" class="wire-inv"/>
   <circle cx="596" cy="407.2" r="3.5" class="bubble"/>
-  <path d="M 120 540 C 336 540, 376 462.8, 592 462.8" class="wire-inv"/>
-  <circle cx="596" cy="462.8" r="3.5" class="bubble"/>
-  <path d="M 510 470 C 550.5 470, 559.5 477.2, 600 477.2" class="wire"/>
-  <path d="M 510 260 C 613.5 260, 628.5 120, 732 120" class="wire-inv"/>
+  <path d="M 120 540 C 273 540, 299 532.8, 452 532.8" class="wire-inv"/>
+  <circle cx="456" cy="532.8" r="3.5" class="bubble"/>
+  <path d="M 370 470 C 410.5 470, 411.5 547.2, 452 547.2" class="wire-inv"/>
+  <circle cx="456" cy="547.2" r="3.5" class="bubble"/>
+  <path d="M 510 190 C 613.5 190, 628.5 120, 732 120" class="wire-inv"/>
   <circle cx="736" cy="120" r="3.5" class="bubble"/>
-  <path d="M 510 330 C 613.5 330, 628.5 190, 732 190" class="wire-inv"/>
+  <path d="M 510 260 C 613.5 260, 628.5 190, 732 190" class="wire-inv"/>
   <circle cx="736" cy="190" r="3.5" class="bubble"/>
-  <path d="M 510 400 C 613.5 400, 628.5 260, 732 260" class="wire-inv"/>
+  <path d="M 510 330 C 613.5 330, 628.5 260, 732 260" class="wire-inv"/>
   <circle cx="736" cy="260" r="3.5" class="bubble"/>
-  <path d="M 510 470 C 613.5 470, 628.5 330, 732 330" class="wire-inv"/>
+  <path d="M 510 400 C 613.5 400, 628.5 330, 732 330" class="wire-inv"/>
   <circle cx="736" cy="330" r="3.5" class="bubble"/>
-  <path d="M 650 260 C 690.5 260, 699.5 400, 740 400" class="wire"/>
-  <path d="M 650 330 C 690.5 330, 691.5 470, 732 470" class="wire-inv"/>
+  <path d="M 650 330 C 690.5 330, 699.5 400, 740 400" class="wire"/>
+  <path d="M 510 470 C 613.5 470, 628.5 470, 732 470" class="wire-inv"/>
   <circle cx="736" cy="470" r="3.5" class="bubble"/>
   <path d="M 650 400 C 690.5 400, 699.5 540, 740 540" class="wire"/>
-  <path d="M 650 470 C 690.5 470, 691.5 610, 732 610" class="wire-inv"/>
+  <path d="M 510 540 C 613.5 540, 628.5 610, 732 610" class="wire-inv"/>
   <circle cx="736" cy="610" r="3.5" class="bubble"/>
   <rect x="40" y="172" width="80" height="36" class="gate-in"/>
   <text x="80" y="190" class="lbl">C1</text>
@@ -93,10 +95,10 @@
   <text x="205" y="340" class="sublbl">#20</text>
   <ellipse cx="345" cy="260" rx="25" ry="18" class="gate-and"/>
   <text x="345" y="258" class="lbl" font-weight="bold">&amp;</text>
-  <text x="345" y="270" class="sublbl">#27</text>
-  <ellipse cx="485" cy="260" rx="25" ry="18" class="gate-and"/>
-  <text x="485" y="258" class="lbl" font-weight="bold">&amp;</text>
-  <text x="485" y="270" class="sublbl">#28</text>
+  <text x="345" y="270" class="sublbl">#29</text>
+  <ellipse cx="485" cy="190" rx="25" ry="18" class="gate-and"/>
+  <text x="485" y="188" class="lbl" font-weight="bold">&amp;</text>
+  <text x="485" y="200" class="sublbl">#30</text>
   <rect x="40" y="452" width="80" height="36" class="gate-in"/>
   <text x="80" y="470" class="lbl">A2</text>
   <ellipse cx="205" cy="400" rx="25" ry="18" class="gate-and"/>
@@ -109,34 +111,34 @@
   <text x="205" y="480" class="sublbl">#23</text>
   <ellipse cx="345" cy="330" rx="25" ry="18" class="gate-and"/>
   <text x="345" y="328" class="lbl" font-weight="bold">&amp;</text>
-  <text x="345" y="340" class="sublbl">#29</text>
-  <ellipse cx="485" cy="330" rx="25" ry="18" class="gate-and"/>
-  <text x="485" y="328" class="lbl" font-weight="bold">&amp;</text>
-  <text x="485" y="340" class="sublbl">#30</text>
+  <text x="345" y="340" class="sublbl">#32</text>
+  <ellipse cx="485" cy="260" rx="25" ry="18" class="gate-and"/>
+  <text x="485" y="258" class="lbl" font-weight="bold">&amp;</text>
+  <text x="485" y="270" class="sublbl">#33</text>
   <ellipse cx="345" cy="400" rx="25" ry="18" class="gate-and"/>
   <text x="345" y="398" class="lbl" font-weight="bold">&amp;</text>
-  <text x="345" y="410" class="sublbl">#31</text>
-  <ellipse cx="485" cy="400" rx="25" ry="18" class="gate-and"/>
-  <text x="485" y="398" class="lbl" font-weight="bold">&amp;</text>
-  <text x="485" y="410" class="sublbl">#32</text>
+  <text x="345" y="410" class="sublbl">#36</text>
+  <ellipse cx="485" cy="330" rx="25" ry="18" class="gate-and"/>
+  <text x="485" y="328" class="lbl" font-weight="bold">&amp;</text>
+  <text x="485" y="340" class="sublbl">#37</text>
   <ellipse cx="345" cy="470" rx="25" ry="18" class="gate-and"/>
   <text x="345" y="468" class="lbl" font-weight="bold">&amp;</text>
-  <text x="345" y="480" class="sublbl">#33</text>
-  <ellipse cx="485" cy="470" rx="25" ry="18" class="gate-and"/>
-  <text x="485" y="468" class="lbl" font-weight="bold">&amp;</text>
-  <text x="485" y="480" class="sublbl">#34</text>
-  <ellipse cx="625" cy="260" rx="25" ry="18" class="gate-and"/>
-  <text x="625" y="258" class="lbl" font-weight="bold">&amp;</text>
-  <text x="625" y="270" class="sublbl">#43</text>
+  <text x="345" y="480" class="sublbl">#39</text>
+  <ellipse cx="485" cy="400" rx="25" ry="18" class="gate-and"/>
+  <text x="485" y="398" class="lbl" font-weight="bold">&amp;</text>
+  <text x="485" y="410" class="sublbl">#40</text>
   <ellipse cx="625" cy="330" rx="25" ry="18" class="gate-and"/>
   <text x="625" y="328" class="lbl" font-weight="bold">&amp;</text>
-  <text x="625" y="340" class="sublbl">#44</text>
+  <text x="625" y="340" class="sublbl">#49</text>
+  <ellipse cx="485" cy="470" rx="25" ry="18" class="gate-and"/>
+  <text x="485" y="468" class="lbl" font-weight="bold">&amp;</text>
+  <text x="485" y="480" class="sublbl">#50</text>
   <ellipse cx="625" cy="400" rx="25" ry="18" class="gate-and"/>
   <text x="625" y="398" class="lbl" font-weight="bold">&amp;</text>
-  <text x="625" y="410" class="sublbl">#45</text>
-  <ellipse cx="625" cy="470" rx="25" ry="18" class="gate-and"/>
-  <text x="625" y="468" class="lbl" font-weight="bold">&amp;</text>
-  <text x="625" y="480" class="sublbl">#46</text>
+  <text x="625" y="410" class="sublbl">#51</text>
+  <ellipse cx="485" cy="540" rx="25" ry="18" class="gate-and"/>
+  <text x="485" y="538" class="lbl" font-weight="bold">&amp;</text>
+  <text x="485" y="550" class="sublbl">#52</text>
   <rect x="740" y="104" width="80" height="32" class="gate-out"/>
   <text x="780" y="120" class="lbl">out[0]</text>
   <rect x="740" y="174" width="80" height="32" class="gate-out"/>

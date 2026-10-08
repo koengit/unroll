@@ -145,6 +145,20 @@ var Circuit = class {
         if (rNode.left === negate(left) || rNode.right === negate(left)) {
           return this.CONST_FALSE;
         }
+        const tryL = this.and(left, rNode.left);
+        if (tryL === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryL === left) {
+          return this.and(left, rNode.right);
+        }
+        const tryR = this.and(left, rNode.right);
+        if (tryR === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryR === left) {
+          return this.and(left, rNode.left);
+        }
       } else {
         if (rNode.left === left) {
           return this.and(left, negate(rNode.right));
@@ -166,6 +180,20 @@ var Circuit = class {
         }
         if (lNode.left === negate(right) || lNode.right === negate(right)) {
           return this.CONST_FALSE;
+        }
+        const tryL = this.and(right, lNode.left);
+        if (tryL === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryL === right) {
+          return this.and(right, lNode.right);
+        }
+        const tryR = this.and(right, lNode.right);
+        if (tryR === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryR === right) {
+          return this.and(right, lNode.left);
         }
       } else {
         if (lNode.left === right) {

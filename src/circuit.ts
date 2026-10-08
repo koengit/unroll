@@ -83,6 +83,24 @@ export class Circuit {
         if (rNode.left === negate(left) || rNode.right === negate(left)) {
           return this.CONST_FALSE;
         }
+
+        // Associative sub-term absorption:
+        // If left & rNode.left => left, then left & (rNode.left & rNode.right) => left & rNode.right
+        const tryL = this.and(left, rNode.left);
+        if (tryL === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryL === left) {
+          return this.and(left, rNode.right);
+        }
+
+        const tryR = this.and(left, rNode.right);
+        if (tryR === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryR === left) {
+          return this.and(left, rNode.left);
+        }
       } else {
         // A & ~(A & B) => A & ~B
         if (rNode.left === left) {
@@ -107,9 +125,25 @@ export class Circuit {
         if (lNode.left === right || lNode.right === right) {
           return left;
         }
-        // (A & ~B) & B => FALSE
+        // (~A & B) & A => FALSE
         if (lNode.left === negate(right) || lNode.right === negate(right)) {
           return this.CONST_FALSE;
+        }
+
+        const tryL = this.and(right, lNode.left);
+        if (tryL === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryL === right) {
+          return this.and(right, lNode.right);
+        }
+
+        const tryR = this.and(right, lNode.right);
+        if (tryR === this.CONST_FALSE) {
+          return this.CONST_FALSE;
+        }
+        if (tryR === right) {
+          return this.and(right, lNode.left);
         }
       } else {
         // ~(A & B) & B => ~A & B
