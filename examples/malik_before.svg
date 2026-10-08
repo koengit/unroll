@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 545" width="640" height="545">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-size: 16px; font-weight: 600; fill: #111827; }
+      .lbl { font-family: system-ui, -apple-system, sans-serif; font-size: 11px; fill: #1f2937; dominant-baseline: central; text-anchor: middle; }
+      .sublbl { font-family: system-ui, -apple-system, sans-serif; font-size: 8px; fill: #6b7280; text-anchor: middle; }
+      .gate-and { fill: #ffffff; stroke: #374151; stroke-width: 1.5; }
+      .gate-in { fill: #e1f5fe; stroke: #0288d1; stroke-width: 1.5; rx: 6px; }
+      .gate-const { fill: #eeeeee; stroke: #757575; stroke-width: 1.5; }
+      .gate-out { fill: #f3e8ff; stroke: #7e22ce; stroke-width: 1.5; rx: 6px; }
+      .wire { fill: none; stroke: #374151; stroke-width: 1.75; stroke-linecap: round; }
+      .wire-inv { fill: none; stroke: #d32f2f; stroke-width: 1.75; stroke-linecap: round; }
+      .bubble { fill: #ffffff; stroke: #d32f2f; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="#fafafa" rx="8"/>
+  <text x="40" y="50" class="title">Malik Cyclic MUX - Before Unrolling</text>
+  <path d="M 120 120 C 147 120, 153 182.8, 180 182.8" class="wire"/>
+  <path d="M 120 190 C 147 190, 153 197.2, 180 197.2" class="wire"/>
+  <path d="M 120 120 C 147 120, 145 252.8, 172 252.8" class="wire-inv"/>
+  <circle cx="176" cy="252.8" r="3.5" class="bubble"/>
+  <path d="M 120 260 C 147 260, 153 267.2, 180 267.2" class="wire"/>
+  <path d="M 230 190 C 270.5 190, 271.5 252.8, 312 252.8" class="wire-inv"/>
+  <circle cx="316" cy="252.8" r="3.5" class="bubble"/>
+  <path d="M 230 260 C 270.5 260, 271.5 267.2, 312 267.2" class="wire-inv"/>
+  <circle cx="316" cy="267.2" r="3.5" class="bubble"/>
+  <path d="M 120 330 C 147 330, 153 322.8, 180 322.8" class="wire"/>
+  <path d="M 120 400 C 147 400, 153 337.2, 180 337.2" class="wire"/>
+  <path d="M 120 330 C 147 330, 145 392.8, 172 392.8" class="wire-inv"/>
+  <circle cx="176" cy="392.8" r="3.5" class="bubble"/>
+  <path d="M 120 470 C 147 470, 153 407.2, 180 407.2" class="wire"/>
+  <path d="M 230 330 C 270.5 330, 271.5 322.8, 312 322.8" class="wire-inv"/>
+  <circle cx="316" cy="322.8" r="3.5" class="bubble"/>
+  <path d="M 230 400 C 270.5 400, 271.5 337.2, 312 337.2" class="wire-inv"/>
+  <circle cx="316" cy="337.2" r="3.5" class="bubble"/>
+  <path d="M 370 260 C 410.5 260, 411.5 260, 452 260" class="wire-inv"/>
+  <circle cx="456" cy="260" r="3.5" class="bubble"/>
+  <path d="M 370 330 C 410.5 330, 411.5 330, 452 330" class="wire-inv"/>
+  <circle cx="456" cy="330" r="3.5" class="bubble"/>
+  <rect x="40" y="102" width="80" height="36" class="gate-in"/>
+  <text x="80" y="120" class="lbl">C1</text>
+  <rect x="40" y="172" width="80" height="36" class="gate-in"/>
+  <text x="80" y="190" class="lbl">Y</text>
+  <ellipse cx="205" cy="190" rx="25" ry="18" class="gate-and"/>
+  <text x="205" y="188" class="lbl" font-weight="bold">&amp;</text>
+  <text x="205" y="200" class="sublbl">#7</text>
+  <rect x="40" y="242" width="80" height="36" class="gate-in"/>
+  <text x="80" y="260" class="lbl">A</text>
+  <ellipse cx="205" cy="260" rx="25" ry="18" class="gate-and"/>
+  <text x="205" y="258" class="lbl" font-weight="bold">&amp;</text>
+  <text x="205" y="270" class="sublbl">#8</text>
+  <ellipse cx="345" cy="260" rx="25" ry="18" class="gate-and"/>
+  <text x="345" y="258" class="lbl" font-weight="bold">&amp;</text>
+  <text x="345" y="270" class="sublbl">#9</text>
+  <rect x="40" y="312" width="80" height="36" class="gate-in"/>
+  <text x="80" y="330" class="lbl">C2</text>
+  <rect x="40" y="382" width="80" height="36" class="gate-in"/>
+  <text x="80" y="400" class="lbl">X</text>
+  <ellipse cx="205" cy="330" rx="25" ry="18" class="gate-and"/>
+  <text x="205" y="328" class="lbl" font-weight="bold">&amp;</text>
+  <text x="205" y="340" class="sublbl">#10</text>
+  <rect x="40" y="452" width="80" height="36" class="gate-in"/>
+  <text x="80" y="470" class="lbl">B</text>
+  <ellipse cx="205" cy="400" rx="25" ry="18" class="gate-and"/>
+  <text x="205" y="398" class="lbl" font-weight="bold">&amp;</text>
+  <text x="205" y="410" class="sublbl">#11</text>
+  <ellipse cx="345" cy="330" rx="25" ry="18" class="gate-and"/>
+  <text x="345" y="328" class="lbl" font-weight="bold">&amp;</text>
+  <text x="345" y="340" class="sublbl">#12</text>
+  <rect x="460" y="244" width="80" height="32" class="gate-out"/>
+  <text x="500" y="260" class="lbl">out[0]</text>
+  <rect x="460" y="314" width="80" height="32" class="gate-out"/>
+  <text x="500" y="330" class="lbl">out[1]</text>
+</svg>
