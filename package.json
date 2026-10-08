@@ -1,0 +1,30 @@
+{
+  "name": "aig-unroller",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts && esbuild src/index.ts --bundle --format=iife --global-name=AigUnroller --outfile=examples/bundle.js --minify",
+    "build:bundle": "esbuild src/index.ts --bundle --format=iife --global-name=AigUnroller --outfile=examples/bundle.js --minify",
+    "test": "vitest run",
+    "example:constructive": "tsx examples/01-constructive-loop.ts",
+    "example:oscillator": "tsx examples/02-oscillator-loop.ts",
+    "example:arbiter": "tsx examples/03-arbiter-multiplexer.ts"
+  },
+  "dependencies": {
+    "logic-solver": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "esbuild": "^0.20.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.4.0"
+  }
+}
