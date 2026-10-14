@@ -70,97 +70,33 @@ export class Circuit {
     const right = Math.max(p1, p2);
 
     // 4. Local Structural Redundancies
-    // Check right child if it is an AND node
-    const rId = nodeId(right);
-    const rNode = this.nodes[rId];
-    if (rNode && rNode.type === 'AND' && rNode.left !== undefined && rNode.right !== undefined) {
-      if (!isNegated(right)) {
-        // A & (A & B) => A & B (= right)
-        if (rNode.left === left || rNode.right === left) {
-          return right;
-        }
-        // A & (~A & B) => FALSE
-        if (rNode.left === negate(left) || rNode.right === negate(left)) {
-          return this.CONST_FALSE;
-        }
-
-        // Associative sub-term absorption:
-        // If left & rNode.left => left, then left & (rNode.left & rNode.right) => left & rNode.right
-        const tryL = this.and(left, rNode.left);
-        if (tryL === this.CONST_FALSE) {
-          return this.CONST_FALSE;
-        }
-        if (tryL === left) {
-          return this.and(left, rNode.right);
-        }
-
-        const tryR = this.and(left, rNode.right);
-        if (tryR === this.CONST_FALSE) {
-          return this.CONST_FALSE;
-        }
-        if (tryR === left) {
-          return this.and(left, rNode.left);
-        }
-      } else {
-        // A & ~(A & B) => A & ~B
-        if (rNode.left === left) {
-          return this.and(left, negate(rNode.right));
-        }
-        if (rNode.right === left) {
-          return this.and(left, negate(rNode.left));
-        }
-        // Absorption: A & ~(~A & B) => A
-        if (rNode.left === negate(left) || rNode.right === negate(left)) {
-          return left;
-        }
+    const checkRule = (a: Point, andP: Point): Point | undefined => {
+      const node = this.nodes[nodeId(andP)];
+      if (!node || node.type !== 'AND' || node.left === undefined || node.right === undefined) {
+        return undefined;
       }
-    }
-
-    // Check left child if it is an AND node
-    const lId = nodeId(left);
-    const lNode = this.nodes[lId];
-    if (lNode && lNode.type === 'AND' && lNode.left !== undefined && lNode.right !== undefined) {
-      if (!isNegated(left)) {
-        // (A & B) & B => A & B (= left)
-        if (lNode.left === right || lNode.right === right) {
-          return left;
-        }
-        // (~A & B) & A => FALSE
-        if (lNode.left === negate(right) || lNode.right === negate(right)) {
-          return this.CONST_FALSE;
-        }
-
-        const tryL = this.and(right, lNode.left);
-        if (tryL === this.CONST_FALSE) {
-          return this.CONST_FALSE;
-        }
-        if (tryL === right) {
-          return this.and(right, lNode.right);
-        }
-
-        const tryR = this.and(right, lNode.right);
-        if (tryR === this.CONST_FALSE) {
-          return this.CONST_FALSE;
-        }
-        if (tryR === right) {
-          return this.and(right, lNode.left);
-        }
+      const { left: l, right: r } = node;
+      if (!isNegated(andP)) {
+        // a & (a & b) => a & b
+        if (l === a || r === a) return andP;
+        // a & (~a & b) => FALSE
+        if (l === negate(a) || r === negate(a)) return this.CONST_FALSE;
       } else {
-        // ~(A & B) & B => ~A & B
-        if (lNode.left === right) {
-          return this.and(negate(lNode.right), right);
-        }
-        if (lNode.right === right) {
-          return this.and(negate(lNode.left), right);
-        }
-        // Absorption: ~(~B & A) & B => B
-        if (lNode.left === negate(right) || lNode.right === negate(right)) {
-          return right;
-        }
+        // a & ~(a & b) => a & ~b
+        if (l === a) return this.and(a, negate(r));
+        if (r === a) return this.and(a, negate(l));
+        // a & ~(~a & b) => a (absorption)
+        if (l === negate(a) || r === negate(a)) return a;
       }
-    }
+      return undefined;
+    };
 
-    // Semantic Equivalence Check: (~a & ~a) => ~a, and (a & ~a) => FALSE
+    const ruleR = checkRule(left, right);
+    if (ruleR !== undefined) return ruleR;
+    const ruleL = checkRule(right, left);
+    if (ruleL !== undefined) return ruleL;
+
+    // Direct semantic equivalence check
     if (this.areEquivalent(left, right)) {
       return left;
     }
@@ -293,26 +229,132 @@ export class Circuit {
         }
       }
 
-      // 2.e. If allStabilized is true: return currentOutputs
+      // 2.e. If allStabilized is true: simplify and return
       if (allStabilized) {
+        const simplifiedOutputs = this.simplify(currentOutputs);
         this.lastUnrollResult = {
           step,
           stabilized: true,
-          outputs: currentOutputs,
+          outputs: simplifiedOutputs,
         };
-        return currentOutputs;
+        return simplifiedOutputs;
       }
 
       // 2.f. currentOutputs = nextOutputs
       currentOutputs = nextOutputs;
     }
 
+    const simplifiedOutputs = this.simplify(currentOutputs);
     this.lastUnrollResult = {
       step: maxK,
       stabilized: false,
-      outputs: currentOutputs,
+      outputs: simplifiedOutputs,
     };
-    return currentOutputs;
+    return simplifiedOutputs;
+  }
+
+  /**
+   * Simplifies the circuit reachable from the given root points using
+   * simulation-guided SAT equivalence reduction and topological rebuilding.
+   */
+  simplify(roots?: Point[]): Point[] {
+    const targetRoots = roots ?? this.lastUnrollResult?.outputs ?? [];
+    if (targetRoots.length === 0) {
+      return [];
+    }
+
+    const netlist = this.exportNetlist(targetRoots);
+    const subst = new Map<number, Point>();
+    const simValues = new Map<number, bigint>();
+    const MASK = 0xffffffffffffffffn;
+
+    simValues.set(0, 0n);
+
+    const getSim = (p: Point): bigint => {
+      const nid = nodeId(p);
+      if (!simValues.has(nid)) {
+        const internal = this.nodes[nid];
+        if (internal && internal.type === 'AND' && internal.left !== undefined && internal.right !== undefined) {
+          const sL = getSim(internal.left);
+          const sR = getSim(internal.right);
+          simValues.set(nid, sL & sR);
+        } else {
+          simValues.set(nid, 0n);
+        }
+      }
+      const val = simValues.get(nid)!;
+      return isNegated(p) ? (~val & MASK) : val;
+    };
+
+    const mapPoint = (p: Point): Point => {
+      const nid = nodeId(p);
+      const target = subst.get(nid);
+      const mapped = target !== undefined ? target : makePoint(nid, false);
+      return isNegated(p) ? this.not(mapped) : mapped;
+    };
+
+    const candidates: Point[] = [this.CONST_FALSE];
+
+    let seed = 0x12345678n;
+    const nextRandom = (): bigint => {
+      seed = (seed * 6364136223846793005n + 1442695040888963407n) & MASK;
+      return seed;
+    };
+
+    for (const node of netlist.nodes) {
+      if (node.type === 'CONST') {
+        subst.set(node.id, this.CONST_FALSE);
+        simValues.set(node.id, 0n);
+      } else if (node.type === 'INPUT') {
+        const pt = makePoint(node.id, false);
+        subst.set(node.id, pt);
+        const simVal = nextRandom();
+        simValues.set(node.id, simVal);
+        candidates.push(pt);
+      } else if (node.type === 'AND') {
+        const internal = this.nodes[node.id];
+        const newL = mapPoint(internal.left!);
+        const newR = mapPoint(internal.right!);
+        let res = this.and(newL, newR);
+
+        if (res === this.CONST_FALSE || res === this.CONST_TRUE) {
+          subst.set(node.id, res);
+          continue;
+        }
+
+        const resSim = getSim(res);
+        let matched = false;
+
+        for (const cand of candidates) {
+          if (cand === res) {
+            matched = true;
+            break;
+          }
+          const candSim = getSim(cand);
+          if (candSim === resSim) {
+            if (this.areEquivalent(res, cand)) {
+              res = cand;
+              matched = true;
+              break;
+            }
+          } else if (candSim === (~resSim & MASK)) {
+            if (this.areEquivalent(res, this.not(cand))) {
+              res = this.not(cand);
+              matched = true;
+              break;
+            }
+          }
+        }
+
+        if (!matched) {
+          candidates.push(res);
+        }
+
+        subst.set(node.id, res);
+      }
+    }
+
+    return targetRoots.map((r) => mapPoint(r));
   }
 
   /**

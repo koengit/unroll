@@ -122,6 +122,11 @@ declare class Circuit {
      */
     unroll(unrollInputs: Point[], unrollOutputs: Point[], initValues: Point[], maxK: number): Point[];
     /**
+     * Simplifies the circuit reachable from the given root points using
+     * simulation-guided SAT equivalence reduction and topological rebuilding.
+     */
+    simplify(roots?: Point[]): Point[];
+    /**
      * Exports a topologically sorted netlist containing only gates reachable from the given root points.
      */
     exportNetlist(roots: Point[]): Netlist;

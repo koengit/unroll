@@ -141,6 +141,7 @@ export class Circuit {
   /**
    * Unrolls the logic loop from `unrollInputs` to `unrollOutputs`.
    * Stops when all outputs stabilize (reach a fixpoint) or when maxK iterations are reached.
+   * Simplifies the circuit after unrolling.
    */
   unroll(
     unrollInputs: Point[],
@@ -148,6 +149,12 @@ export class Circuit {
     initValues: Point[],
     maxK: number
   ): Point[];
+
+  /**
+   * Simplifies the circuit reachable from the given root points using
+   * simulation-guided SAT equivalence reduction and topological rebuilding.
+   */
+  simplify(roots?: Point[]): Point[];
 
   /**
    * Exports a topologically sorted netlist containing only gates reachable from the given root points.

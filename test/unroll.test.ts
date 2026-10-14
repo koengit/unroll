@@ -62,6 +62,7 @@ describe('Circuit Unrolling & Fixpoint Detection', () => {
     // A stabilized to CONST_FALSE
     // B stabilized to not(M)
     expect(stabilized[0]).toBe(c.CONST_FALSE);
+    expect(stabilized[1]).toBe(c.not(m));
     expect(c.areEquivalent(stabilized[1], c.not(m))).toBe(true);
   });
 
@@ -79,6 +80,7 @@ describe('Circuit Unrolling & Fixpoint Detection', () => {
     expect(c.lastUnrollResult!.step).toBe(2);
     // After step 1: Q1 = D | 0 = D
     // After step 2: Q2 = D | D = D (equivalent to Q1)
+    expect(stabilized[0]).toBe(d);
     expect(c.areEquivalent(stabilized[0], d)).toBe(true);
   });
 
@@ -101,7 +103,8 @@ describe('Circuit Unrolling & Fixpoint Detection', () => {
     expect(c.lastUnrollResult).toBeDefined();
     expect(c.lastUnrollResult!.stabilized).toBe(true);
     expect(c.lastUnrollResult!.step).toBe(2);
-    // After step 2: Q stabilizes to Set
+    // After step 2: Q stabilizes to Set directly after simplification
+    expect(stabilized[0]).toBe(set);
     expect(c.areEquivalent(stabilized[0], set)).toBe(true);
   });
 
@@ -154,6 +157,8 @@ describe('Circuit Unrolling & Fixpoint Detection', () => {
     expect(c.lastUnrollResult).toBeDefined();
     expect(c.lastUnrollResult!.stabilized).toBe(true);
     expect(c.lastUnrollResult!.step).toBe(2);
+    // After step 2: C stabilizes to (InA & InB) directly after simplification
+    expect(stabilized[0]).toBe(both);
     expect(c.areEquivalent(stabilized[0], both)).toBe(true);
   });
 });

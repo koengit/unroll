@@ -89,10 +89,10 @@ const stabOutF2 = c.or(stabX2, a2);
 const stabOutG1 = c.and(stabY1, b1);
 const stabOutG2 = c.or(stabY2, b2);
 
-const allRootsAfter = [
+const allRootsAfter = c.simplify([
   stabX1, stabX2, stabY1, stabY2,
   stabOutF1, stabOutF2, stabOutG1, stabOutG2
-];
+]);
 
 const netlistAfter = c.exportNetlist(allRootsAfter);
 const svgAfter = exportSvg(netlistAfter, { title: 'Malik F/G Cyclic Network - Stabilized' });

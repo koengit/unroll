@@ -169,3 +169,38 @@ describe('Topological Order & Netlist Export', () => {
     expect(netlist.roots).toEqual([root]);
   });
 });
+
+describe('Circuit Simplification (simplify)', () => {
+  it('simplifies redundant formulas to inputs and constants', () => {
+    const c = new Circuit();
+    const a = c.createInput('A');
+    const b = c.createInput('B');
+
+    // Expression equivalent to A: (A & B) | (A & ~B)
+    const complexA = c.or(c.and(a, b), c.and(a, c.not(b)));
+    // Expression equivalent to CONST_FALSE: (A & ~A) | (B & ~B)
+    const complexFalse = c.or(c.and(a, c.not(a)), c.and(b, c.not(b)));
+
+    const simplified = c.simplify([complexA, complexFalse]);
+    expect(simplified[0]).toBe(a);
+    expect(simplified[1]).toBe(c.CONST_FALSE);
+  });
+
+  it('eliminates redundant gates and shares equivalent subgraphs', () => {
+    const c = new Circuit();
+    const a = c.createInput('A');
+    const b = c.createInput('B');
+
+    // Two differently encoded MUX implementations of same logic
+    const mux1 = c.or(c.and(a, b), c.and(c.not(a), b)); // simplifies to b
+    const mux2 = c.mux(a, b, b);                         // simplifies to b
+
+    const simplified = c.simplify([mux1, mux2]);
+    expect(simplified[0]).toBe(b);
+    expect(simplified[1]).toBe(b);
+
+    const netlist = c.exportNetlist(simplified);
+    // Netlist should contain only input B, zero AND gates
+    expect(netlist.nodes.filter((n) => n.type === 'AND').length).toBe(0);
+  });
+});
