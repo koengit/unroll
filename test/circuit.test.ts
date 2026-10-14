@@ -81,6 +81,23 @@ describe('Circuit Simplifications', () => {
     expect(c.and(a, c.or(a, b))).toBe(a);
     expect(c.and(c.not(a), c.or(c.not(a), b))).toBe(c.not(a));
   });
+
+  it('simplifies associative absorption: ~x and (~(~y and x) and z) = ~x and z', () => {
+    const c = new Circuit();
+    const x = c.createInput('X');
+    const y = c.createInput('Y');
+    const z = c.createInput('Z');
+
+    // (~y & x)
+    const notY_and_x = c.and(c.not(y), x);
+    // (~(~y & x) & z)
+    const inner = c.and(c.not(notY_and_x), z);
+    // ~x & (~(~y & x) & z) must simplify to ~x & z
+    const res = c.and(c.not(x), inner);
+    const expected = c.and(c.not(x), z);
+
+    expect(res).toBe(expected);
+  });
 });
 
 describe('SAT Equivalence Checking', () => {

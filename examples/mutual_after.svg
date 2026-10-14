@@ -25,7 +25,7 @@
   <text x="80" y="190" class="lbl">Cond2</text>
   <ellipse cx="205" cy="155" rx="25" ry="18" class="gate-and"/>
   <text x="205" y="153" class="lbl" font-weight="bold">&amp;</text>
-  <text x="205" y="165" class="sublbl">#9</text>
+  <text x="205" y="165" class="sublbl">#11</text>
   <rect x="320" y="104" width="80" height="32" class="gate-out"/>
   <text x="360" y="120" class="lbl">out[0]</text>
   <rect x="320" y="174" width="80" height="32" class="gate-out"/>

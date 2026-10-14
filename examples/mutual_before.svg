@@ -37,14 +37,14 @@
   <text x="205" y="235" class="sublbl">#6</text>
   <ellipse cx="345" cy="260" rx="25" ry="18" class="gate-and"/>
   <text x="345" y="258" class="lbl" font-weight="bold">&amp;</text>
-  <text x="345" y="270" class="sublbl">#7</text>
+  <text x="345" y="270" class="sublbl">#9</text>
   <rect x="40" y="312" width="80" height="36" class="gate-in"/>
   <text x="80" y="330" class="lbl">Cond2</text>
   <rect x="40" y="382" width="80" height="36" class="gate-in"/>
   <text x="80" y="400" class="lbl">SigA</text>
   <ellipse cx="205" cy="295" rx="25" ry="18" class="gate-and"/>
   <text x="205" y="293" class="lbl" font-weight="bold">&amp;</text>
-  <text x="205" y="305" class="sublbl">#8</text>
+  <text x="205" y="305" class="sublbl">#10</text>
   <rect x="460" y="209" width="80" height="32" class="gate-out"/>
   <text x="500" y="225" class="lbl">out[0]</text>
   <rect x="460" y="279" width="80" height="32" class="gate-out"/>

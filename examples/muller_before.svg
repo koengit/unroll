@@ -44,10 +44,10 @@
   <text x="205" y="235" class="sublbl">#5</text>
   <ellipse cx="345" cy="190" rx="25" ry="18" class="gate-and"/>
   <text x="345" y="188" class="lbl" font-weight="bold">&amp;</text>
-  <text x="345" y="200" class="sublbl">#6</text>
+  <text x="345" y="200" class="sublbl">#8</text>
   <ellipse cx="485" cy="190" rx="25" ry="18" class="gate-and"/>
   <text x="485" y="188" class="lbl" font-weight="bold">&amp;</text>
-  <text x="485" y="200" class="sublbl">#7</text>
+  <text x="485" y="200" class="sublbl">#15</text>
   <rect x="600" y="174" width="80" height="32" class="gate-out"/>
   <text x="640" y="190" class="lbl">out[0]</text>
 </svg>

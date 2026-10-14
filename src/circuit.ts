@@ -81,12 +81,31 @@ export class Circuit {
         if (l === a || r === a) return andP;
         // a & (~a & b) => FALSE
         if (l === negate(a) || r === negate(a)) return this.CONST_FALSE;
+
+        // Associative absorption: a & (l & r) = (a & l) & r
+        const tryL = this.and(a, l);
+        if (tryL === this.CONST_FALSE) return this.CONST_FALSE;
+        if (tryL === a) return this.and(a, r);
+        if (tryL === l) return andP;
+
+        const tryR = this.and(a, r);
+        if (tryR === this.CONST_FALSE) return this.CONST_FALSE;
+        if (tryR === a) return this.and(a, l);
+        if (tryR === r) return andP;
       } else {
         // a & ~(a & b) => a & ~b
         if (l === a) return this.and(a, negate(r));
         if (r === a) return this.and(a, negate(l));
         // a & ~(~a & b) => a (absorption)
         if (l === negate(a) || r === negate(a)) return a;
+
+        // If a implies l (a & l == a), then a & ~(l & r) = a & ~r
+        const tryL = this.and(a, l);
+        if (tryL === a) return this.and(a, negate(r));
+
+        // If a implies r (a & r == a), then a & ~(l & r) = a & ~l
+        const tryR = this.and(a, r);
+        if (tryR === a) return this.and(a, negate(l));
       }
       return undefined;
     };

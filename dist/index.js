@@ -144,10 +144,22 @@ var Circuit = class {
       if (!isNegated(andP)) {
         if (l === a || r === a) return andP;
         if (l === negate(a) || r === negate(a)) return this.CONST_FALSE;
+        const tryL = this.and(a, l);
+        if (tryL === this.CONST_FALSE) return this.CONST_FALSE;
+        if (tryL === a) return this.and(a, r);
+        if (tryL === l) return andP;
+        const tryR = this.and(a, r);
+        if (tryR === this.CONST_FALSE) return this.CONST_FALSE;
+        if (tryR === a) return this.and(a, l);
+        if (tryR === r) return andP;
       } else {
         if (l === a) return this.and(a, negate(r));
         if (r === a) return this.and(a, negate(l));
         if (l === negate(a) || r === negate(a)) return a;
+        const tryL = this.and(a, l);
+        if (tryL === a) return this.and(a, negate(r));
+        const tryR = this.and(a, r);
+        if (tryR === a) return this.and(a, negate(l));
       }
       return void 0;
     };
